@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=pyamqp://guest@rabbitmq//
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=pyamqp://guest@rabbitmq//
+    command: celery -A api.tasks worker --loglevel=info
+    volumes:
+      - ./api:/app/api
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
