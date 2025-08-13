@@ -1,5 +1,5 @@
 
-#Proje Tanımı
+#Proje Tanımı:
 
 Bu proje, Python kullanılarak geliştirilecek bir RESTful API uygulamasıdır.  
 API, sisteme tanımlanan "job" görevlerini çalıştıracak, sonuçlarını veritabanına kaydedecek ve kullanıcıya sunacaktır.  
